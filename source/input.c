@@ -598,6 +598,9 @@ int input_read_parameters(
   }
 
   /** (a) background parameters */
+  
+  /** - Gravitation constant */
+  class_read_double("G_var",pba->G_var);
 
   /** - scale factor today (arbitrary) */
   class_read_double("a_today",pba->a_today);
@@ -2943,7 +2946,7 @@ int input_default_params(
      0.67556. Hence, we take h=0.67556, N_ur=3.046, N_ncdm=0, and all
      other parameters from the Planck2013 Cosmological Parameter
      paper. */
-
+  pba->G_var = 6.67428e-11;
   pba->h = 0.67556;
   pba->H0 = pba->h * 1.e5 / _c_;
   pba->T_cmb = 2.7255;
