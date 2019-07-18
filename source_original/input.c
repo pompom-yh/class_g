@@ -63,7 +63,6 @@ int input_init_from_arguments(
   input_file[0]='\0';
   precision_file[0]='\0';
 
-
   /** - If some arguments are passed, identify eventually some 'xxx.ini'
       and 'xxx.pre' files, and store their name. */
 
@@ -564,8 +563,7 @@ int input_read_parameters(
                                   psp,
                                   pnl,
                                   ple,
-                                  pop,
-                                  ppr),
+                                  pop),
              errmsg,
              errmsg);
 
@@ -600,10 +598,6 @@ int input_read_parameters(
   }
 
   /** (a) background parameters */
-  
-  /** - Gravitation constant */
-  
-  class_read_double("G_var",_G_);
 
   /** - scale factor today (arbitrary) */
   class_read_double("a_today",pba->a_today);
@@ -2553,8 +2547,7 @@ int input_read_parameters(
   /** (h) all precision parameters */
 
   /** - (h.1.) parameters related to the background */
-  /** - Gravitation constant */
-  //class_read_double("G_var",_G_);
+
   class_read_double("a_ini_over_a_today_default",ppr->a_ini_over_a_today_default);
   class_read_double("back_integration_stepsize",ppr->back_integration_stepsize);
   class_read_double("tol_background_integration",ppr->tol_background_integration);
@@ -2925,8 +2918,7 @@ int input_default_params(
                          struct spectra *psp,
                          struct nonlinear * pnl,
                          struct lensing *ple,
-                         struct output *pop,
-                         struct precision * ppr
+                         struct output *pop
                          ) {
 
   double sigma_B; /* Stefan-Boltzmann constant in \f$ W/m^2/K^4 = Kg/K^4/s^3 \f$*/
@@ -2951,11 +2943,11 @@ int input_default_params(
      0.67556. Hence, we take h=0.67556, N_ur=3.046, N_ncdm=0, and all
      other parameters from the Planck2013 Cosmological Parameter
      paper. */
-  //*ptr_G= 6.67428e-11;
+
   pba->h = 0.67556;
   pba->H0 = pba->h * 1.e5 / _c_;
   pba->T_cmb = 2.7255;
-  pba->Omega0_g = (4.*sigma_B/_c_*pow(pba->T_cmb,4.)) / (3.*_c_*_c_*1.e10*pba->h*pba->h/_Mpc_over_m_/_Mpc_over_m_/8./_PI_/6.67428e-11); //use physical G value as placeholder, avoiding error.
+  pba->Omega0_g = (4.*sigma_B/_c_*pow(pba->T_cmb,4.)) / (3.*_c_*_c_*1.e10*pba->h*pba->h/_Mpc_over_m_/_Mpc_over_m_/8./_PI_/_G_);
   pba->Omega0_ur = 3.046*7./8.*pow(4./11.,4./3.)*pba->Omega0_g;
   pba->Omega0_b = 0.022032/pow(pba->h,2);
   pba->Omega0_cdm = 0.12038/pow(pba->h,2);
@@ -3256,7 +3248,7 @@ int input_default_precision ( struct precision * ppr ) {
   /** Initialize presicion parameters for different structures:
    * - parameters related to the background
    */
-  //ppr->G_var = 6.67428e-11;
+
   ppr->a_ini_over_a_today_default = 1.e-14;
   ppr->back_integration_stepsize = 7.e-3;
   ppr->tol_background_integration = 1.e-2;

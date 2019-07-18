@@ -218,8 +218,7 @@ extern "C" {
 			   struct spectra *psp,
 			   struct nonlinear *pnl,
 			   struct lensing *ple,
-			   struct output *pop,
-               struct precision *ppr
+			   struct output *pop
 			   );
 
   int input_default_precision(

@@ -60,7 +60,7 @@ typedef char FileName[_FILENAMESIZE_];
 
 #define _DELIMITER_ "\t" /**< character used for delimiting titles in the title strings */
 
-#define _G_ ppr->G_var
+
 
 #ifndef __CLASSDIR__
 #define __CLASSDIR__ "." /**< The directory of CLASS. This is set to the absolute path to the CLASS directory so this is just a failsafe. */
@@ -348,9 +348,6 @@ struct precision
   /** @name - parameters related to the background */
   //@{
 
-    
-  // add gravitation constant
-    double G_var;
   /**
    * default initial value of scale factor in background integration, in
    * units of scale factor today
