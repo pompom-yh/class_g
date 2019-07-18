@@ -42,7 +42,7 @@ struct background
    * e.g. for dark energy or decaying dark matter). */
 
   //@{
-
+  double _G_; //gravitation constant
   double H0; /**< \f$ H_0 \f$: Hubble parameter (in fact, [\f$H_0/c\f$]) in \f$ Mpc^{-1} \f$ */
 
   double Omega0_g; /**< \f$ \Omega_{0 \gamma} \f$: photons */
