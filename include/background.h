@@ -546,7 +546,11 @@ extern "C" {
 #define _Gyr_over_Mpc_ 3.06601394e2 /**< conversion factor from megaparsecs to gigayears
 				         (c=1 units, Julian years of 365.25 days) */
 #define _c_ 2.99792458e8            /**< c in m/s */
-#define _G_ 6.67428e-11             /**< Newton constant in m^3/Kg/s^2 */
+/*#define _G_ 6.67428e-11*1.1 */            /**< Newton constant in m^3/Kg/s^2 */
+/*#define _G_ 6.67428e-11 */
+/*#define _G_ 6.67428e-11*1.2 */
+
+#define _G_ 6.67428e-11
 #define _eV_ 1.602176487e-19        /**< 1 eV expressed in J */
 
 /* parameters entering in Stefan-Boltzmann constant sigma_B */
