@@ -284,7 +284,7 @@ int background_functions(
   /* scalar field quantities */
   double phi, phi_prime;
    // variables for mu_of_a//
-  double mu0,x;
+  double mu0,x,mu_of_a;
   /** - initialize local variables */
   a = pvecback_B[pba->index_bi_a];
   rho_tot = 0.;
@@ -292,6 +292,7 @@ int background_functions(
   rho_r=0.;
   rho_m=0.;
   a_rel = a / pba->a_today;
+  
 
   class_test(a_rel <= 0.,
              pba->error_message,
@@ -309,11 +310,13 @@ int background_functions(
                              //x=(N-N_T)/delta_T
                              //f=(mu0+mu_inf)/2+(mu0-mu_inf)/2*x/np.sqrt(1+x**2)
                              //return f
-  pvecback[pba->index_bg_mu]=1.0;
+  mu_of_a=1.0;
   if (pba->mu_var == _TRUE_) {
    x=(log(a)-log(pba->a_T))/pba->delta_T;
    mu0=1.0;
-   pvecback[pba->index_bg_mu]=(m0+pba->mu_inf)/2.0+(m0-pba->mu_inf)/2.0*x/sqrt(1+pow(x,2));}
+   pvecback[pba->index_bg_mu]=(mu0+pba->mu_inf)/2.0+(mu0-pba->mu_inf)/2.0*x/sqrt(1+pow(x,2));
+  mu_of_a=pvecback[pba->index_bg_mu];
+  }
 
   /** - compute each component's density and pressure */
 
@@ -449,7 +452,7 @@ int background_functions(
       only place where the Friedmann equation is assumed. Remember
       that densities are all expressed in units of \f$ [3c^2/8\pi G] \f$, ie
       \f$ \rho_{class} = [8 \pi G \rho_{physical} / 3 c^2]\f$ */
-  pvecback[pba->index_bg_H] = pvecback[pba->index_bg_mu]*sqrt(rho_tot-pba->K/a/a);
+  pvecback[pba->index_bg_H] = mu_of_a*sqrt(rho_tot-pba->K/a/a);
 
   /** - compute derivative of H with respect to conformal time */
   pvecback[pba->index_bg_H_prime] = - (3./2.) * (rho_tot + p_tot) * a + pba->K/a;
@@ -864,7 +867,7 @@ int background_indices(
   pba->has_curvature = _FALSE_;
   pba->mu_var =_FALSE_;
   
-  if (pba->m_inf != 1.)
+  if (pba->mu_inf != 1.)
       pba->mu_var = _TRUE_;
 
   if (pba->Omega0_cdm != 0.)

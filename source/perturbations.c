@@ -5135,7 +5135,9 @@ int perturb_einstein(
   a2 = a * a;
   a_prime_over_a = ppw->pvecback[pba->index_bg_H]*a;
   s2_squared = 1.-3.*pba->K/k2;
-  mu_of_a=ppw->pvecback[pba->index_bg_mu];
+  mu_of_a=1.0;
+  if (pba->mu_var == _TRUE_) {
+      mu_of_a=ppw->pvecback[pba->index_bg_mu];}
 
   /** - sum up perturbations from all species */
   class_call(perturb_total_stress_energy(ppr,pba,pth,ppt,index_md,k,y,ppw),

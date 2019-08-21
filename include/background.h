@@ -280,7 +280,7 @@ struct background
 
   //@{
   
-  short mu_var // mu_of_a varying?
+    short mu_var; // mu_of_a varying?
   short has_cdm;       /**< presence of cold dark matter? */
   short has_dcdm;      /**< presence of decaying cold dark matter? */
   short has_dr;        /**< presence of relativistic decay radiation? */
