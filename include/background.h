@@ -43,6 +43,11 @@ struct background
 
   //@{
 //  double G_var; //variable gravitation constant
+    // mu_of_a, change ratio of G as function of scale factor:
+  double a_T // transition scale factor for step function mu
+  double mu_inf //mu at redshift infinity
+  double delta_T // width of step in log(a)
+    
   double H0; /**< \f$ H_0 \f$: Hubble parameter (in fact, [\f$H_0/c\f$]) in \f$ Mpc^{-1} \f$ */
 
   double Omega0_g; /**< \f$ \Omega_{0 \gamma} \f$: photons */
@@ -550,8 +555,8 @@ extern "C" {
 /*#define _G_ 6.67428e-11 */
 /*#define _G_ 6.67428e-11*1.2 */
 
-//#define _G_ ppr->G_var //6.67428e-11 moved to common.h
 //extern double _G_;
+//#define _G_ pba->G_var //6.67428e-11
 #define _eV_ 1.602176487e-19        /**< 1 eV expressed in J */
 
 /* parameters entering in Stefan-Boltzmann constant sigma_B */

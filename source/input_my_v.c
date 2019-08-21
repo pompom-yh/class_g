@@ -1,8 +1,6 @@
 /** @file input.c Documented input module.
- * Best version as of Jul19 6:16pm
-   for an input constant G, still E-6 difference in Background.dat and Cl.dat from original
-   *change*, along with input.h and commom.h
-* Julien Lesgourgues, 27.08.2010
+ *
+ * Julien Lesgourgues, 27.08.2010
  */
 
 #include "input.h"
@@ -557,8 +555,6 @@ int input_read_parameters(
   sigma_B = 2. * pow(_PI_,5) * pow(_k_B_,4) / 15. / pow(_h_P_,3) / pow(_c_,2);
 
   /** - set all parameters (input and precision) to default values */
-    
-  class_read_double("G_var",_G_);
 
   class_call(input_default_params(pba,
                                   pth,
@@ -607,7 +603,7 @@ int input_read_parameters(
   
   /** - Gravitation constant */
   
-  //class_read_double("G_var",_G_);
+  class_read_double("G_var",_G_);
 
   /** - scale factor today (arbitrary) */
   class_read_double("a_today",pba->a_today);
@@ -2961,7 +2957,8 @@ int input_default_params(
   pba->h = 0.67556;
   pba->H0 = pba->h * 1.e5 / _c_;
   pba->T_cmb = 2.7255;
-  pba->Omega0_g = (4.*sigma_B/_c_*pow(pba->T_cmb,4.)) / (3.*_c_*_c_*1.e10*pba->h*pba->h/_Mpc_over_m_/_Mpc_over_m_/8./_PI_/_G_);
+  pba->Omega0_g = (4.*sigma_B/_c_*pow(pba->T_cmb,4.)) / (3.*_c_*_c_*1.e10*pba->h*pba->h/_Mpc_over_m_/_Mpc_over_m_/8./_PI_/6.67428e-11); //use physical G value as placeholder, avoiding error.
+ // pba->G_var = 6.67428e-11;
   pba->Omega0_ur = 3.046*7./8.*pow(4./11.,4./3.)*pba->Omega0_g;
   pba->Omega0_b = 0.022032/pow(pba->h,2);
   pba->Omega0_cdm = 0.12038/pow(pba->h,2);
@@ -3262,7 +3259,7 @@ int input_default_precision ( struct precision * ppr ) {
   /** Initialize presicion parameters for different structures:
    * - parameters related to the background
    */
-  //ppr->G_var = 6.67428e-11;
+  ppr->G_var = 6.67428e-11; //was fine b/c G read later than default
 
   ppr->a_ini_over_a_today_default = 1.e-14;
   ppr->back_integration_stepsize = 7.e-3;

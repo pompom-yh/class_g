@@ -1,0 +1,91 @@
+on MARCC
+First download class, montepython, plc-2.0 and plc_2.0
+
+——————————————————————
+Set up necessary packages for python:
+
+$pip install --user package-name
+where package-name is one of: scipy, cython, mpi4py (pyfits?)
+——————————————————————
+For class:
+$make clean
+$make
+
+$module unload python/3… #if using different python version
+$module load python/2.7
+
+$ cd python/
+$ python setup.py build
+$ python setup.py install (—-user)
+
+——————————————————————
+For montepython:
+
+edit default.conf.template, set class path (and plik)
+cp default.conf.template  default.conf
+
+If using class with G_var, in example.param, add data.parameters['G_var']=[6.67428e-11,0,1,0,1,'cosmo']
+for fixed G
+
+$python montepython/MontePython.py run -o test -p example.param
+
+for help:
+
+$ python montepython/MontePython.py  run -h
+or 
+$ python montepython/MontePython.py  info -h
+
+——————————————————————
+For montepython w/ MPI:
+
+$ mpirun -np N montepython/MontePython.py run …
+#where N = #chains
+
+To use multiple cores per chain write:
+$ OMP_NUM_THREADS=M mpirun -np N montepython/MontePython.py run …
+# where M = # cores for each chain
+
+To time everything:
+add “time” at the start of command line
+
+Setting M=3, N=3 w/ example.param I got:
+real	0m24.380s
+user	3m4.955s
+sys	0m5.770s
+
+w/ only N=3:
+real	0m16.160s
+user	3m42.360s
+sys	0m14.961s
+——————————————————————
+
+Montepython w/ Planck:
+to work w/ montepython, need a Planck likelihood configured with the intel mkl library 
+
+mkl location:
+/software/apps/compilers/intel/mkl
+
+$module load gcc/6.4.0
+
+To get MKL (**this is needed before running import clik in Python):
+$source /software/apps/compilers/intel/bin/compilervars.sh intel64
+
+In plc-2.0 do:
+$./waf configure --install_all_deps --lapack_mkl=/software/apps/compilers/intel/mkl/
+$./waf install
+$ source bin/clik_profile.sh #to get clik in python
+
+Check that you can import clik in python
+
+Go to montepython folder, set the correct clik path in default.conf.
+
+run a test, remember to specify G_var in *.param files:
+$python montepython/MontePython.py run -o test -p base2015.param
+
+If the test run fails, or want a new input file, remember to rm test/ before running another one. If “test” already exist, montepython will try to append to existing chains using log.param instead of new.param.
+
+
+For mpirun to work, need log.params in the folder before running.
+
+for speed: add -c covmat/base2015.covmat
+

@@ -1,8 +1,6 @@
 /** @file input.c Documented input module.
- * Best version as of Jul19 6:16pm
-   for an input constant G, still E-6 difference in Background.dat and Cl.dat from original
-   *change*, along with input.h and commom.h
-* Julien Lesgourgues, 27.08.2010
+ * Josh's version
+ * Julien Lesgourgues, 27.08.2010
  */
 
 #include "input.h"
@@ -45,7 +43,7 @@ int input_init_from_arguments(
 
   char input_file[_ARGUMENT_LENGTH_MAX_];
   char precision_file[_ARGUMENT_LENGTH_MAX_];
-  char tmp_file[_ARGUMENT_LENGTH_MAX_+26]; // 26 is enough to extend the file name [...] with the characters "output/[...]%02d_parameters.ini" (as done below)
+  char tmp_file[_ARGUMENT_LENGTH_MAX_];
 
   int i;
   char extension[5];
@@ -64,7 +62,6 @@ int input_init_from_arguments(
   fc_precision.size = 0;
   input_file[0]='\0';
   precision_file[0]='\0';
-
 
   /** - If some arguments are passed, identify eventually some 'xxx.ini'
       and 'xxx.pre' files, and store their name. */
@@ -556,9 +553,8 @@ int input_read_parameters(
 
   sigma_B = 2. * pow(_PI_,5) * pow(_k_B_,4) / 15. / pow(_h_P_,3) / pow(_c_,2);
 
+  class_read_double("G_var",ppr->G_var);
   /** - set all parameters (input and precision) to default values */
-    
-  class_read_double("G_var",_G_);
 
   class_call(input_default_params(pba,
                                   pth,
@@ -604,13 +600,10 @@ int input_read_parameters(
   }
 
   /** (a) background parameters */
-  
-  /** - Gravitation constant */
-  
-  //class_read_double("G_var",_G_);
 
   /** - scale factor today (arbitrary) */
   class_read_double("a_today",pba->a_today);
+
 
   /** - h (dimensionless) and [\f$ H_0/c\f$] in \f$ Mpc^{-1} = h / 2997.9... = h * 10^5 / c \f$ */
   class_call(parser_read_double(pfc,"H0",&param1,&flag1,errmsg),
@@ -678,13 +671,20 @@ int input_read_parameters(
   class_call(parser_read_double(pfc,"omega_b",&param2,&flag2,errmsg),
              errmsg,
              errmsg);
-  class_test(((flag1 == _TRUE_) && (flag2 == _TRUE_)),
+  /* Read the baryon fraction eta_b*/
+  class_call(parser_read_double(pfc,"eta_b",&param3,&flag3,errmsg), errmsg,errmsg);
+/*  class_test(((flag1 == _TRUE_) && (flag2 == _TRUE_)),
              errmsg,
              "In input file, you can only enter one of Omega_b or omega_b, choose one");
+  */
+  /*Test that at most one of the three flags has been set: */
+  class_test(class_at_least_two_of_three(flag1,flag2,flag3),errmsg,"In input file, you can only pass one of Omega_b, omega_b, or eta_b");
   if (flag1 == _TRUE_)
     pba->Omega0_b = param1;
   if (flag2 == _TRUE_)
     pba->Omega0_b = param2/pba->h/pba->h;
+  /* Set Omega_b in the background structure using our formula*/
+  if (flag3 == _TRUE_) pba->Omega0_b = 1.81e6*param3*pow(pba->T_cmb,3)/pba->h/pba->h;
 
   Omega_tot += pba->Omega0_b;
 
@@ -759,13 +759,19 @@ int input_read_parameters(
   class_call(parser_read_double(pfc,"omega_cdm",&param2,&flag2,errmsg),
              errmsg,
              errmsg);
-  class_test(((flag1 == _TRUE_) && (flag2 == _TRUE_)),
+  class_call(parser_read_double(pfc,"Omega_m",&param3,&flag3,errmsg),errmsg,errmsg);
+
+  /*class_test(((flag1 == _TRUE_) && (flag2 == _TRUE_)),
              errmsg,
              "In input file, you can only enter one of Omega_cdm or omega_cdm, choose one");
+  */
+  class_test(class_at_least_two_of_three(flag1,flag2,flag3),errmsg,"In put file, you can only enter one of Omega_cdm, omega_cdm, or Omega_m");
   if (flag1 == _TRUE_)
     pba->Omega0_cdm = param1;
   if (flag2 == _TRUE_)
     pba->Omega0_cdm = param2/pba->h/pba->h;
+  if (flag3 == _TRUE_)
+    pba->Omega0_cdm = (param3 - pba->Omega0_b)/pba->h/pba->h;
 
   Omega_tot += pba->Omega0_cdm;
 
@@ -958,6 +964,12 @@ int input_read_parameters(
   /** - Set curvature sign */
   if (pba->K > 0.) pba->sgnK = 1;
   else if (pba->K < 0.) pba->sgnK = -1;
+
+  /*Extra fluid*/
+  class_read_double("Omega_efld", pba->Omega0_efld);
+  class_read_double("w0_eld",pba->w0_efld);
+
+  Omega_tot += pba->Omega0_efld;
 
   /** - Omega_0_lambda (cosmological constant), Omega0_fld (dark energy fluid), Omega0_scf (scalar field) */
 
@@ -2468,13 +2480,8 @@ int input_read_parameters(
   }
   /* end of z_max section */
 
-  class_call(parser_read_string(pfc,"root",&string1,&flag1,errmsg),
-             errmsg,
-             errmsg);
-  if (flag1 == _TRUE_){
-    class_test(strlen(string1)>_FILENAMESIZE_-32,errmsg,"Root directory name is too long. Please install in other directory, or increase _FILENAMESIZE_ in common.h");
-    strcpy(pop->root,string1);
-  }
+  class_read_string("root",pop->root);
+
   class_call(parser_read_string(pfc,
                                 "headers",
                                 &(string1),
@@ -2557,8 +2564,6 @@ int input_read_parameters(
   /** (h) all precision parameters */
 
   /** - (h.1.) parameters related to the background */
-  /** - Gravitation constant */
-  //class_read_double("G_var",_G_);
 
   class_read_double("a_ini_over_a_today_default",ppr->a_ini_over_a_today_default);
   class_read_double("back_integration_stepsize",ppr->back_integration_stepsize);
@@ -2931,8 +2936,7 @@ int input_default_params(
                          struct nonlinear * pnl,
                          struct lensing *ple,
                          struct output *pop,
-                         struct precision * ppr
-                      
+                         struct precision *ppr
                          ) {
 
   double sigma_B; /* Stefan-Boltzmann constant in \f$ W/m^2/K^4 = Kg/K^4/s^3 \f$*/
@@ -2957,7 +2961,7 @@ int input_default_params(
      0.67556. Hence, we take h=0.67556, N_ur=3.046, N_ncdm=0, and all
      other parameters from the Planck2013 Cosmological Parameter
      paper. */
-  //*ptr_G= 6.67428e-11;
+
   pba->h = 0.67556;
   pba->H0 = pba->h * 1.e5 / _c_;
   pba->T_cmb = 2.7255;
@@ -2997,6 +3001,8 @@ int input_default_params(
   pba->use_ppf = _TRUE_;
   pba->c_gamma_over_c_fld = 0.4;
   pba->fluid_equation_of_state = CLP;
+  pba->Omega0_efld = 0;
+  pba->w0_efld = -1;
   pba->w0_fld = -1.;
   pba->wa_fld = 0.;
   pba->Omega_EDE = 0.;
@@ -3262,7 +3268,6 @@ int input_default_precision ( struct precision * ppr ) {
   /** Initialize presicion parameters for different structures:
    * - parameters related to the background
    */
-  //ppr->G_var = 6.67428e-11;
 
   ppr->a_ini_over_a_today_default = 1.e-14;
   ppr->back_integration_stepsize = 7.e-3;
@@ -3947,6 +3952,7 @@ int input_get_guess(double *xguess,
         //printf("x = Omega_ini_guess = %g, dxdy = %g\n",*xguess,*dxdy);
       break;
     case Omega_scf:
+
 
  /** - This guess is arbitrary, something nice using WKB should be implemented.
   *

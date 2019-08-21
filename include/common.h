@@ -1,5 +1,5 @@
 /** @file common.h Generic libraries, parameters and functions used in the whole code. */
-
+// *change*
 #include "stdio.h"
 #include "stdlib.h"
 #include "math.h"
@@ -61,6 +61,7 @@ typedef char FileName[_FILENAMESIZE_];
 #define _DELIMITER_ "\t" /**< character used for delimiting titles in the title strings */
 
 #define _G_ ppr->G_var
+
 
 #ifndef __CLASSDIR__
 #define __CLASSDIR__ "." /**< The directory of CLASS. This is set to the absolute path to the CLASS directory so this is just a failsafe. */
