@@ -44,9 +44,9 @@ struct background
   //@{
 //  double G_var; //variable gravitation constant
     // mu_of_a, change ratio of G as function of scale factor:
-  double a_T // transition scale factor for step function mu
-  double mu_inf //mu at redshift infinity
-  double delta_T // width of step in log(a)
+  double a_T; // transition scale factor for step function mu
+  double mu_inf; //mu at redshift infinity
+  double delta_T; // width of step in log(a)
     
   double H0; /**< \f$ H_0 \f$: Hubble parameter (in fact, [\f$H_0/c\f$]) in \f$ Mpc^{-1} \f$ */
 

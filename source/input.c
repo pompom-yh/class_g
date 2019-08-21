@@ -611,6 +611,12 @@ int input_read_parameters(
 
   /** - scale factor today (arbitrary) */
   class_read_double("a_today",pba->a_today);
+    
+  /**  mu_of_a, change ratio of G as function of scale factor: */
+  class_read_double("a_T",pba->a_T);
+  class_read_double("mu_inf", pba->mu_inf);
+  class_read_double("delta_T", pba->delta_T);
+    
 
   /** - h (dimensionless) and [\f$ H_0/c\f$] in \f$ Mpc^{-1} = h / 2997.9... = h * 10^5 / c \f$ */
   class_call(parser_read_double(pfc,"H0",&param1,&flag1,errmsg),
@@ -2958,6 +2964,9 @@ int input_default_params(
      other parameters from the Planck2013 Cosmological Parameter
      paper. */
   //*ptr_G= 6.67428e-11;
+    pba->a_T = 1.e-3;
+    pba->mu_inf=1.0;
+    pba->delta_T=0.1;
   pba->h = 0.67556;
   pba->H0 = pba->h * 1.e5 / _c_;
   pba->T_cmb = 2.7255;

@@ -95,6 +95,8 @@
  * @return the error status
  */
 
+
+
 int background_at_tau(
                       struct background *pba,
                       double tau,
@@ -223,6 +225,15 @@ int background_tau_of_z(
 
   return _SUCCESS_;
 }
+
+int background_mu_of_a(struct background *pba,
+                       double a
+                       ){
+    double mu;
+    
+    return mu;
+}
+
 
 /**
  * Background quantities at given \f$ a \f$.
