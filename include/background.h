@@ -172,7 +172,7 @@ struct background
   int index_bg_a;             /**< scale factor */
   int index_bg_H;             /**< Hubble parameter in \f$Mpc^{-1}\f$ */
   int index_bg_H_prime;       /**< its derivative w.r.t. conformal time */
-
+  int index_bg_mu;
   /* end of vector in short format, now quantities in normal format */
 
   int index_bg_rho_g;         /**< photon density */
@@ -279,7 +279,8 @@ struct background
 
 
   //@{
-
+  
+  short mu_var // mu_of_a varying?
   short has_cdm;       /**< presence of cold dark matter? */
   short has_dcdm;      /**< presence of decaying cold dark matter? */
   short has_dr;        /**< presence of relativistic decay radiation? */

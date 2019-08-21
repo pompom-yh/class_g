@@ -846,6 +846,10 @@ int background_indices(
   pba->has_fld = _FALSE_;
   pba->has_ur = _FALSE_;
   pba->has_curvature = _FALSE_;
+  pba->mu_var =_FALSE_;
+  
+  if (pba->m_inf != 1.)
+      pba->mu_var = _TRUE_;
 
   if (pba->Omega0_cdm != 0.)
     pba->has_cdm = _TRUE_;
@@ -884,7 +888,8 @@ int background_indices(
   /* - indices for H and its conformal-time-derivative */
   class_define_index(pba->index_bg_H,_TRUE_,index_bg,1);
   class_define_index(pba->index_bg_H_prime,_TRUE_,index_bg,1);
-
+  
+  class_define_index(pba->index_bg_mu,pba->mu_var,index_bg,1);
   /* - end of indices in the short vector of background values */
   pba->bg_size_short = index_bg;
 
