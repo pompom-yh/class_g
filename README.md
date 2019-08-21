@@ -116,3 +116,12 @@ To get support, please open a new issue on the
 https://github.com/lesgourg/class_public
 
 webpage!
+
+G as function of time
+-------
+Add variable mu_of_a, with mu defined as G_var/G_Newton.
+mu_of_a is a smoothed step function.
+Input parameters are : mu_inf, a_T, delta_T.
+
+mu_inf is mu at infinite z. a_T sets the transition scale factor. delta_T is the width of step in log(a).
+
