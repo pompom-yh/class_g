@@ -283,7 +283,8 @@ int background_functions(
   double a;
   /* scalar field quantities */
   double phi, phi_prime;
-
+   // variables for mu_of_a//
+  double mu0,x;
   /** - initialize local variables */
   a = pvecback_B[pba->index_bi_a];
   rho_tot = 0.;
@@ -298,6 +299,21 @@ int background_functions(
 
   /** - pass value of \f$ a\f$ to output */
   pvecback[pba->index_bg_a] = a;
+                             
+  /* mu_of_a*/
+//def mu(a,a_T=1e-3,mu_inf=1.1,delta_T=0.1):
+                             
+                             //N_T=np.log(a_T)
+
+                             //N=np.log(a)
+                             //x=(N-N_T)/delta_T
+                             //f=(mu0+mu_inf)/2+(mu0-mu_inf)/2*x/np.sqrt(1+x**2)
+                             //return f
+  pvecback[pba->index_bg_mu]=1.0;
+  if (pba->mu_var == _TRUE_) {
+   x=(log(a)-log(pba->a_T))/pba->delta_T;
+   mu0=1.0;
+   pvecback[pba->index_bg_mu]=(m0+pba->mu_inf)/2.0+(m0-pba->mu_inf)/2.0*x/sqrt(1+pow(x,2));}
 
   /** - compute each component's density and pressure */
 
@@ -433,7 +449,7 @@ int background_functions(
       only place where the Friedmann equation is assumed. Remember
       that densities are all expressed in units of \f$ [3c^2/8\pi G] \f$, ie
       \f$ \rho_{class} = [8 \pi G \rho_{physical} / 3 c^2]\f$ */
-  pvecback[pba->index_bg_H] = sqrt(rho_tot-pba->K/a/a);
+  pvecback[pba->index_bg_H] = pvecback[pba->index_bg_mu]*sqrt(rho_tot-pba->K/a/a);
 
   /** - compute derivative of H with respect to conformal time */
   pvecback[pba->index_bg_H_prime] = - (3./2.) * (rho_tot + p_tot) * a + pba->K/a;
@@ -2173,6 +2189,7 @@ int background_output_titles(struct background * pba,
   char tmp[24];
 
   class_store_columntitle(titles,"z",_TRUE_);
+  class_store_columntitle(titles,"mu_of_a",pba->mu_var);
   class_store_columntitle(titles,"proper time [Gyr]",_TRUE_);
   class_store_columntitle(titles,"conf. time [Mpc]",_TRUE_);
   class_store_columntitle(titles,"H [1/Mpc]",_TRUE_);
@@ -2227,6 +2244,7 @@ int background_output_data(
     storeidx = 0;
 
     class_store_double(dataptr,pba->a_today/pvecback[pba->index_bg_a]-1.,_TRUE_,storeidx);
+    class_store_double(dataptr,pvecback[pba->index_bg_mu],pba->mu_var,storeidx);
     class_store_double(dataptr,pvecback[pba->index_bg_time]/_Gyr_over_Mpc_,_TRUE_,storeidx);
     class_store_double(dataptr,pba->conformal_age-pvecback[pba->index_bg_conf_distance],_TRUE_,storeidx);
     class_store_double(dataptr,pvecback[pba->index_bg_H],_TRUE_,storeidx);
