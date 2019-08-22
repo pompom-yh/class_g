@@ -47,7 +47,8 @@ struct background
   double a_T; // transition scale factor for step function mu
   double mu_inf; //mu at redshift infinity
   double delta_T; // width of step in log(a)
-    
+    int mu_bg;
+    int mu_pt;
   double H0; /**< \f$ H_0 \f$: Hubble parameter (in fact, [\f$H_0/c\f$]) in \f$ Mpc^{-1} \f$ */
 
   double Omega0_g; /**< \f$ \Omega_{0 \gamma} \f$: photons */

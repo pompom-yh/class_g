@@ -311,7 +311,7 @@ int background_functions(
                              //f=(mu0+mu_inf)/2+(mu0-mu_inf)/2*x/np.sqrt(1+x**2)
                              //return f
   mu_of_a=1.0;
-  if (pba->mu_var == _TRUE_) {
+  if ((pba->mu_var == _TRUE_)&&(pba->mu_bg == _TRUE_)) {
    x=(log(a)-log(pba->a_T))/pba->delta_T;
    mu0=1.0;
    pvecback[pba->index_bg_mu]=(mu0+pba->mu_inf)/2.0+(mu0-pba->mu_inf)/2.0*x/sqrt(1+pow(x,2));
