@@ -226,13 +226,7 @@ int background_tau_of_z(
   return _SUCCESS_;
 }
 
-int background_mu_of_a(struct background *pba,
-                       double a
-                       ){
-    double mu;
-    
-    return mu;
-}
+
 
 
 /**
@@ -311,13 +305,15 @@ int background_functions(
                              //f=(mu0+mu_inf)/2+(mu0-mu_inf)/2*x/np.sqrt(1+x**2)
                              //return f
   mu_of_a=1.0;
+  x=(log(a)-log(pba->a_T))/pba->delta_T;
+  mu0=1.0;
+  pvecback[pba->index_bg_mu]=(mu0+pba->mu_inf)/2.0+(mu0-pba->mu_inf)/2.0*x/sqrt(1+pow(x,2));
+                             
   if ((pba->mu_var == _TRUE_)&&(pba->mu_bg == _TRUE_)) {
-   x=(log(a)-log(pba->a_T))/pba->delta_T;
-   mu0=1.0;
-   pvecback[pba->index_bg_mu]=(mu0+pba->mu_inf)/2.0+(mu0-pba->mu_inf)/2.0*x/sqrt(1+pow(x,2));
   mu_of_a=pvecback[pba->index_bg_mu];
   }
 
+                             
   /** - compute each component's density and pressure */
 
   /* photons */
@@ -418,7 +414,7 @@ int background_functions(
   /* Lambda */
   if (pba->has_lambda == _TRUE_) {
     pvecback[pba->index_bg_rho_lambda] = pba->Omega0_lambda * pow(pba->H0,2);
-    rho_tot += pvecback[pba->index_bg_rho_lambda];
+    rho_tot += pvecback[pba->index_bg_rho_lambda]/mu_of_a;
     p_tot -= pvecback[pba->index_bg_rho_lambda];
   }
 
@@ -452,7 +448,7 @@ int background_functions(
       only place where the Friedmann equation is assumed. Remember
       that densities are all expressed in units of \f$ [3c^2/8\pi G] \f$, ie
       \f$ \rho_{class} = [8 \pi G \rho_{physical} / 3 c^2]\f$ */
-  pvecback[pba->index_bg_H] = mu_of_a*sqrt(rho_tot-pba->K/a/a);
+  pvecback[pba->index_bg_H] = sqrt(mu_of_a*rho_tot-pba->K/a/a);
 
   /** - compute derivative of H with respect to conformal time */
   pvecback[pba->index_bg_H_prime] = - (3./2.) * (rho_tot + p_tot) * a + pba->K/a;
