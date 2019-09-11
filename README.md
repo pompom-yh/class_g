@@ -1,4 +1,4 @@
-CLASS: Cosmic Linear Anisotropy Solving System  {#oringally forked from main page}
+CLASS: Cosmic Linear Anisotropy Solving System  
 ==============================================
 
 Authors: Julien Lesgourgues and Thomas Tram
