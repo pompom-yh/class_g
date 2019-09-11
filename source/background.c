@@ -278,7 +278,7 @@ int background_functions(
   /* scalar field quantities */
   double phi, phi_prime;
    // variables for mu_of_a//
-  double mu0,x,mu_of_a;
+  double x,mu_of_a;
   /** - initialize local variables */
   a = pvecback_B[pba->index_bi_a];
   rho_tot = 0.;
@@ -306,10 +306,9 @@ int background_functions(
                              //return f
   mu_of_a=1.0;
   x=(log(a)-log(pba->a_T))/pba->delta_T;
-  mu0=1.0;
-                             
+
   if (pba->mu_var == _TRUE_){
-      pvecback[pba->index_bg_mu]=(mu0+pba->mu_inf)/2.0+(mu0-pba->mu_inf)/2.0*x/sqrt(1+pow(x,2));}
+      pvecback[pba->index_bg_mu]=(pba->mu_0+pba->mu_inf)/2.0+(pba->mu_0-pba->mu_inf)/2.0*x/sqrt(1+pow(x,2));}
                              
   if ((pba->mu_var == _TRUE_)&&(pba->mu_bg == _TRUE_)) {
   mu_of_a=pvecback[pba->index_bg_mu];
@@ -865,7 +864,7 @@ int background_indices(
   pba->has_curvature = _FALSE_;
   pba->mu_var =_FALSE_;
   
-  if (pba->mu_inf != 1.)
+  if (pba->mu_inf != 1. || pba->mu_0 != 1. )
       pba->mu_var = _TRUE_;
 
   if (pba->Omega0_cdm != 0.)

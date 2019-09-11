@@ -46,6 +46,7 @@ struct background
     // mu_of_a, change ratio of G as function of scale factor:
   double a_T; // transition scale factor for step function mu
   double mu_inf; //mu at redshift infinity
+  double mu_0; //mu at redshift 0
   double delta_T; // width of step in log(a)
     int mu_bg;
     int mu_pt;

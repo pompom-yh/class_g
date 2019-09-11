@@ -615,6 +615,7 @@ int input_read_parameters(
   /**  mu_of_a, change ratio of G as function of scale factor: */
   class_read_double("a_T",pba->a_T);
   class_read_double("mu_inf", pba->mu_inf);
+    class_read_double("mu_0", pba->mu_0);
   class_read_double("delta_T", pba->delta_T);
     class_read_int("mu_bg",pba->mu_bg);
     class_read_int("mu_pt",pba->mu_pt);
@@ -2967,6 +2968,7 @@ int input_default_params(
   //*ptr_G= 6.67428e-11;
     pba->a_T = 1.e-3;
     pba->mu_inf=1.0;
+    pba->mu_0=1.0;
     pba->delta_T=0.1;
     pba->mu_bg=1;
     pba->mu_pt=1;

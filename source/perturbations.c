@@ -5168,7 +5168,7 @@ int perturb_einstein(
       ppw->pvecmetric[ppw->index_mt_psi] = y[ppw->pv->index_pt_phi] - 4.5* mu_of_a * (a2/k2) * ppw->rho_plus_p_shear;
 
       /* equation for phi' */
-      ppw->pvecmetric[ppw->index_mt_phi_prime] = -a_prime_over_a * ppw->pvecmetric[ppw->index_mt_psi] + 1.5* mu_of_a * (a2/k2) * ppw->rho_plus_p_theta;
+      ppw->pvecmetric[ppw->index_mt_phi_prime] = -a_prime_over_a * ppw->pvecmetric[ppw->index_mt_psi] + 1.5* mu_of_a*  (a2/k2) * ppw->rho_plus_p_theta;
 
       /* eventually, infer radiation streaming approximation for
          gamma and ur (this is exactly the right place to do it
